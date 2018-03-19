@@ -4,6 +4,7 @@
   "zookeeper_hosts":["localhost"],
   "store_host":"localhost",
   "store_db":"argo_msg",
+  "certificate_authorities":"/etc/grid-security/certificates/",
   "certificate":"/etc/pki/tls/certs/localhost.crt",
   "certificate_key":"/etc/pki/tls/private/localhost.key",
   "per_resource_auth":"true",

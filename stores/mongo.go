@@ -555,7 +555,32 @@ func (mong *MongoStore) GetUserRoles(projectUUID string, token string) ([]string
 
 	// Search the found user for project roles
 	return results[0].getProjectRoles(projectUUID), results[0].Name
+}
 
+//GetUserRolesViaCert returns the roles of a user in a project
+func (mong *MongoStore) GetUserRolesViaCert(projectUUID string, dn string) ([]string, string) {
+
+	db := mong.Session.DB(mong.Database)
+	c := db.C("users")
+	var results []QUser
+
+	err := c.Find(bson.M{"dn": dn}).All(&results)
+
+	if err != nil {
+		log.Fatal("STORE", "\t", err.Error())
+	}
+
+	if len(results) == 0 {
+		return []string{}, ""
+	}
+
+	if len(results) > 1 {
+		log.Warning("STORE", "\t", "Multiple users with the same DN", dn)
+
+	}
+
+	// Search the found user for project roles
+	return results[0].getProjectRoles(projectUUID), results[0].Name
 }
 
 //GetUserFromToken returns user information from a specific token
@@ -582,7 +607,6 @@ func (mong *MongoStore) GetUserFromToken(token string) (QUser, error) {
 
 	// Search the found user for project roles
 	return results[0], err
-
 }
 
 // QueryOneSub queries and returns specific sub of project
@@ -644,8 +668,8 @@ func (mong *MongoStore) InsertOpMetric(hostname string, cpu float64, mem float64
 }
 
 // InsertUser inserts a new user to the store
-func (mong *MongoStore) InsertUser(uuid string, projects []QProjectRoles, name string, token string, email string, serviceRoles []string, createdOn time.Time, modifiedOn time.Time, createdBy string) error {
-	user := QUser{UUID: uuid, Name: name, Email: email, Token: token, Projects: projects, ServiceRoles: serviceRoles, CreatedOn: createdOn, ModifiedOn: modifiedOn, CreatedBy: createdBy}
+func (mong *MongoStore) InsertUser(uuid string, projects []QProjectRoles, name string, token string, email string, dn string, serviceRoles []string, createdOn time.Time, modifiedOn time.Time, createdBy string) error {
+	user := QUser{UUID: uuid, Name: name, Email: email, DN: dn, Token: token, Projects: projects, ServiceRoles: serviceRoles, CreatedOn: createdOn, ModifiedOn: modifiedOn, CreatedBy: createdBy}
 	return mong.InsertResource("users", user)
 }
 

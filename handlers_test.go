@@ -186,6 +186,7 @@ func (suite *HandlerTestSuite) TestUserListByToken() {
    "name": "UserA",
    "token": "S3CR3T1",
    "email": "foo-email",
+   "dn": "test-dn-1",
    "service_roles": [],
    "created_on": "2009-11-10T23:00:00Z",
    "modified_on": "2009-11-10T23:00:00Z"
@@ -235,6 +236,7 @@ func (suite *HandlerTestSuite) TestUserListOne() {
    "name": "UserA",
    "token": "S3CR3T1",
    "email": "foo-email",
+   "dn": "test-dn-1",
    "service_roles": [],
    "created_on": "2009-11-10T23:00:00Z",
    "modified_on": "2009-11-10T23:00:00Z"
@@ -279,6 +281,7 @@ func (suite *HandlerTestSuite) TestUserListAll() {
          "name": "Test",
          "token": "S3CR3T",
          "email": "Test@test.com",
+         "dn": "test-dn-0",
          "service_roles": [],
          "created_on": "2009-11-10T23:00:00Z",
          "modified_on": "2009-11-10T23:00:00Z"
@@ -305,6 +308,7 @@ func (suite *HandlerTestSuite) TestUserListAll() {
          "name": "UserA",
          "token": "S3CR3T1",
          "email": "foo-email",
+         "dn": "test-dn-1",
          "service_roles": [],
          "created_on": "2009-11-10T23:00:00Z",
          "modified_on": "2009-11-10T23:00:00Z"
@@ -331,6 +335,7 @@ func (suite *HandlerTestSuite) TestUserListAll() {
          "name": "UserB",
          "token": "S3CR3T2",
          "email": "foo-email",
+         "dn": "test-dn-2",
          "service_roles": [],
          "created_on": "2009-11-10T23:00:00Z",
          "modified_on": "2009-11-10T23:00:00Z",
@@ -355,6 +360,7 @@ func (suite *HandlerTestSuite) TestUserListAll() {
          "name": "UserX",
          "token": "S3CR3T3",
          "email": "foo-email",
+         "dn": "test-dn-3",
          "service_roles": [],
          "created_on": "2009-11-10T23:00:00Z",
          "modified_on": "2009-11-10T23:00:00Z",
@@ -380,6 +386,7 @@ func (suite *HandlerTestSuite) TestUserListAll() {
          "name": "UserZ",
          "token": "S3CR3T4",
          "email": "foo-email",
+         "dn": "test-dn-4",
          "service_roles": [],
          "created_on": "2009-11-10T23:00:00Z",
          "modified_on": "2009-11-10T23:00:00Z",

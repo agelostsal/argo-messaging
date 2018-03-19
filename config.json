@@ -1,3 +1,4 @@
+
 {
   "bind_ip":"",
   "port":8080,
@@ -5,8 +6,9 @@
   "kafka_znode":"",
   "store_host":"localhost",
   "store_db":"argo_msg",
+  "certificate_authorities":"/etc/grid-security/certificates/",
   "certificate":"/etc/pki/tls/certs/localhost.crt",
   "certificate_key":"/etc/pki/tls/private/localhost.key",
-  "service_token":"b328c3861f061f87cbd34cf34f36ba2ae20883a5",
+  "service_token":"1234",
   "log_level":"INFO"
 }

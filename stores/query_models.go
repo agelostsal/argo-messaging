@@ -47,6 +47,7 @@ type QUser struct {
 	Name         string          `bson:"name"`
 	Token        string          `bson:"token"`
 	Email        string          `bson:"email"`
+	DN           string          `bson:"dn,omitempty"`
 	ServiceRoles []string        `bson:"service_roles"`
 	CreatedOn    time.Time       `bson:"created_on"`
 	ModifiedOn   time.Time       `bson:"modified_on"`

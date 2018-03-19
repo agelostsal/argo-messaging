@@ -125,18 +125,24 @@ func WrapAuthenticate(hfn http.Handler) http.HandlerFunc {
 
 		projectUUID := projects.GetUUIDByName(urlVars["project"], refStr)
 
-		// Check first if service token is used
-		if serviceToken != "" && serviceToken == urlValues.Get("key") {
+		var roles []string
+		var user string
+
+		// First check for certificate
+		if len(r.TLS.PeerCertificates) > 0 {
+			roles, user = auth.AuthenticateViaCert(projectUUID, auth.Rdns_to_String(r.TLS.PeerCertificates[0].Subject.ToRDNSequence()), refStr)
+
+		} else if serviceToken != "" && serviceToken == urlValues.Get("key") { // Check if service token is used
+
 			context.Set(r, "auth_roles", []string{})
 			context.Set(r, "auth_user", "")
 			context.Set(r, "auth_user_uuid", "")
 			context.Set(r, "auth_project_uuid", projectUUID)
 			hfn.ServeHTTP(w, r)
 			return
+		} else {
+			roles, user = auth.Authenticate(projectUUID, urlValues.Get("key"), refStr)
 		}
-
-		roles, user := auth.Authenticate(projectUUID, urlValues.Get("key"), refStr)
-
 		if len(roles) > 0 {
 			userUUID := auth.GetUUIDByName(user, refStr)
 			context.Set(r, "auth_roles", roles)
@@ -581,7 +587,7 @@ func UserCreate(w http.ResponseWriter, r *http.Request) {
 	token, err := auth.GenToken() // generate a new user token
 	created := time.Now()
 	// Get Result Object
-	res, err := auth.CreateUser(uuid, urlUser, postBody.Projects, token, postBody.Email, postBody.ServiceRoles, created, refUserUUID, refStr)
+	res, err := auth.CreateUser(uuid, urlUser, postBody.Projects, token, postBody.Email, postBody.DN, postBody.ServiceRoles, created, refUserUUID, refStr)
 
 	if err != nil {
 		if err.Error() == "exists" {

@@ -57,8 +57,8 @@ func (mk *MockStore) Close() {
 }
 
 // InsertUser inserts a new user to the store
-func (mk *MockStore) InsertUser(uuid string, projects []QProjectRoles, name string, token string, email string, serviceRoles []string, createdOn time.Time, modifiedOn time.Time, createdBy string) error {
-	user := QUser{UUID: uuid, Name: name, Email: email, Projects: projects, Token: token, ServiceRoles: serviceRoles, CreatedOn: createdOn, ModifiedOn: modifiedOn, CreatedBy: createdBy}
+func (mk *MockStore) InsertUser(uuid string, projects []QProjectRoles, name string, token string, email string, dn string, serviceRoles []string, createdOn time.Time, modifiedOn time.Time, createdBy string) error {
+	user := QUser{UUID: uuid, Name: name, Email: email, DN: dn, Projects: projects, Token: token, ServiceRoles: serviceRoles, CreatedOn: createdOn, ModifiedOn: modifiedOn, CreatedBy: createdBy}
 	mk.UserList = append(mk.UserList, user)
 	return nil
 }
@@ -404,16 +404,16 @@ func (mk *MockStore) Initialize() {
 
 	// populate Users
 	qRole := []QProjectRoles{QProjectRoles{"argo_uuid", []string{"consumer", "publisher"}}}
-	qUsr := QUser{"uuid0", qRole, "Test", "S3CR3T", "Test@test.com", []string{}, created, modified, ""}
+	qUsr := QUser{"uuid0", qRole, "Test", "S3CR3T", "Test@test.com", "test-dn-0", []string{}, created, modified, ""}
 
 	mk.UserList = append(mk.UserList, qUsr)
 
 	qRoleConsumerPub := []QProjectRoles{QProjectRoles{"argo_uuid", []string{"publisher", "consumer"}}}
 
-	mk.UserList = append(mk.UserList, QUser{"uuid1", qRole, "UserA", "S3CR3T1", "foo-email", []string{}, created, modified, ""})
-	mk.UserList = append(mk.UserList, QUser{"uuid2", qRole, "UserB", "S3CR3T2", "foo-email", []string{}, created, modified, "uuid1"})
-	mk.UserList = append(mk.UserList, QUser{"uuid3", qRoleConsumerPub, "UserX", "S3CR3T3", "foo-email", []string{}, created, modified, "uuid1"})
-	mk.UserList = append(mk.UserList, QUser{"uuid4", qRoleConsumerPub, "UserZ", "S3CR3T4", "foo-email", []string{}, created, modified, "uuid1"})
+	mk.UserList = append(mk.UserList, QUser{"uuid1", qRole, "UserA", "S3CR3T1", "foo-email", "test-dn-1", []string{}, created, modified, ""})
+	mk.UserList = append(mk.UserList, QUser{"uuid2", qRole, "UserB", "S3CR3T2", "foo-email", "test-dn-2", []string{}, created, modified, "uuid1"})
+	mk.UserList = append(mk.UserList, QUser{"uuid3", qRoleConsumerPub, "UserX", "S3CR3T3", "foo-email", "test-dn-3", []string{}, created, modified, "uuid1"})
+	mk.UserList = append(mk.UserList, QUser{"uuid4", qRoleConsumerPub, "UserZ", "S3CR3T4", "foo-email", "test-dn-4", []string{}, created, modified, "uuid1"})
 
 	qRole1 := QRole{"topics:list_all", []string{"admin", "reader", "publisher"}}
 	qRole2 := QRole{"topics:publish", []string{"admin", "publisher"}}
@@ -477,6 +477,19 @@ func (mk *MockStore) GetUserRoles(projectUUID string, token string) ([]string, s
 	for _, item := range mk.UserList {
 
 		if item.Token == token {
+			return item.getProjectRoles(projectUUID), item.Name
+
+		}
+	}
+
+	return []string{}, ""
+}
+
+// GetUserRolesViaCert returns the roles of a user in a project
+func (mk *MockStore) GetUserRolesViaCert(projectUUID string, dn string) ([]string, string) {
+	for _, item := range mk.UserList {
+
+		if item.DN == dn {
 			return item.getProjectRoles(projectUUID), item.Name
 
 		}

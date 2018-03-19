@@ -23,6 +23,7 @@ type APICfg struct {
 	KafkaZnode   string //The Zookeeper znode used by Kafka
 	StoreHost    string
 	StoreDB      string
+	CAs          string
 	Cert         string
 	CertKey      string
 	ResAuth      bool
@@ -177,6 +178,9 @@ func (cfg *APICfg) Load() {
 		pflag.String("store-db", "argo_msg", "datastore (mongodb) database name")
 		viper.BindPFlag("store_db", pflag.Lookup("store-db"))
 
+		pflag.String("certificate_authorities", "/etc/grid-security/certificates/", "directory containg all the CAs")
+		viper.BindPFlag("certificate_authorities", pflag.Lookup("certificate_authorities"))
+
 		pflag.String("certificate", "/etc/pki/tls/certs/localhost.crt", "certificate file *.crt")
 		viper.BindPFlag("certificate", pflag.Lookup("certificate"))
 
@@ -215,22 +219,34 @@ func (cfg *APICfg) Load() {
 	// Then load rest of the parameters
 	cfg.BindIP = viper.GetString("bind_ip")
 	log.Info("CONFIG", "\t", "Parameter Loaded - bind_ip: ", cfg.BindIP)
+
 	cfg.Port = viper.GetInt("port")
 	log.Info("CONFIG", "\t", "Parameter Loaded - port: ", cfg.Port)
+
 	cfg.ZooHosts = viper.GetStringSlice("zookeeper_hosts")
 	log.Info("CONFIG", "\t", "Parameter Loaded - zookeeper_hosts: ", cfg.ZooHosts)
+
 	cfg.KafkaZnode = viper.GetString("kafka_znode")
 	log.Info("CONFIG", "\t", "Parameter Loaded - kafka_znode: ", cfg.KafkaZnode)
+
 	cfg.StoreHost = viper.GetString("store_host")
 	log.Info("CONFIG", "\t", "Parameter Loaded - store_host: ", cfg.StoreHost)
+
 	cfg.StoreDB = viper.GetString("store_db")
 	log.Info("CONFIG", "\t", "Parameter Loaded - store_db: ", cfg.StoreDB)
+
+	cfg.CAs = viper.GetString("certificate_authorities")
+	log.Info("CONFIG", "\t", "Parameter Loaded - certificate_authorities: ", cfg.CAs)
+
 	cfg.Cert = viper.GetString("certificate")
 	log.Info("CONFIG", "\t", "Parameter Loaded - certificate: ", cfg.Cert)
+
 	cfg.CertKey = viper.GetString("certificate_key")
 	log.Info("CONFIG", "\t", "Parameter Loaded - certificate_key: ", cfg.CertKey)
+
 	cfg.ResAuth = viper.GetBool("per_resource_auth")
 	log.Info("CONFIG", "\t", "Parameter Loaded - per_resource_auth: ", cfg.CertKey)
+
 	cfg.ServiceToken = viper.GetString("service_token")
 	log.Info("CONFIG", "\t", "Parameter Loaded - service_token: ", cfg.ServiceToken)
 

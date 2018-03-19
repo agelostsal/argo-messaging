@@ -21,7 +21,7 @@ type Store interface {
 	RemoveProject(uuid string) error
 	RemoveProjectTopics(projectUUID string) error
 	RemoveProjectSubs(projectUUID string) error
-	InsertUser(uuid string, projects []QProjectRoles, name string, token string, email string, serviceRoles []string, createdOn time.Time, modifiedOn time.Time, createdBy string) error
+	InsertUser(uuid string, projects []QProjectRoles, name string, token string, email string, dn string, serviceRoles []string, createdOn time.Time, modifiedOn time.Time, createdBy string) error
 	InsertProject(uuid string, name string, createdOn time.Time, modifiedOn time.Time, createdBy string, description string) error
 	InsertOpMetric(hostname string, cpu float64, mem float64) error
 	InsertTopic(projectUUID string, name string) error
@@ -37,6 +37,7 @@ type Store interface {
 	HasResourceRoles(resource string, roles []string) bool
 	GetOpMetrics() []QopMetric
 	GetUserRoles(projectUUID string, token string) ([]string, string)
+	GetUserRolesViaCert(projectUUID string, dn string) ([]string, string)
 	GetUserFromToken(token string) (QUser, error)
 	UpdateSubOffset(projectUUID string, name string, offset int64)
 	UpdateSubPull(projectUUID string, name string, offset int64, ts string) error
