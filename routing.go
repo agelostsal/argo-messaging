@@ -47,7 +47,7 @@ func NewRouting(cfg *config.APICfg, brk brokers.Broker, str stores.Store, mgr *o
 		handler = WrapLog(handler, route.Name)
 
 		// skip authentication/authorization for the health status and profile api calls
-		if route.Name != "ams:healthStatus" && "users:profile" != route.Name && route.Name != "version:list" {
+		if route.Name != "ams:healthStatus" && "users:profile" != route.Name && route.Name != "version:list" && route.Name != "registrations:newUser" {
 			handler = WrapAuthorize(handler, route.Name)
 			handler = WrapAuthenticate(handler)
 		}
@@ -83,6 +83,7 @@ var defaultRoutes = []APIRoute{
 	{"users:create", "POST", "/users/{user}", UserCreate},
 	{"users:update", "PUT", "/users/{user}", UserUpdate},
 	{"users:delete", "DELETE", "/users/{user}", UserDelete},
+	{"registrations:newUser", "POST", "/registrations/{user}", RegisterUser},
 	{"projects:list", "GET", "/projects", ProjectListAll},
 	{"projects:metrics", "GET", "/projects/{project}:metrics", ProjectMetrics},
 	{"projects:addUser", "POST", "/projects/{project}/members/{user}:add", ProjectUserAdd},

@@ -592,6 +592,20 @@ func (suite *StoreTestSuite) TestMockStore() {
 	suite.Equal("", qtd[0].SchemaUUID)
 	suite.Equal([]QSchema{}, expd)
 	suite.Nil(ed)
+
+	// test user registration
+	store.RegisterUser("ruuid1", "n1", "f1", "l1", "e1", "o1", "d1", "time")
+	suite.Equal(1, len(store.UserRegistrations))
+	suite.Equal(QUserRegister{
+		UUID:         "ruuid1",
+		Name:         "n1",
+		FirstName:    "f1",
+		LastName:     "l1",
+		Email:        "e1",
+		Organization: "o1",
+		Description:  "d1",
+		RegisteredAt: "time",
+	}, store.UserRegistrations[0])
 }
 
 func TestStoresTestSuite(t *testing.T) {

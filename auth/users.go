@@ -52,6 +52,18 @@ type PaginatedUsers struct {
 	TotalSize     int32  `json:"totalSize"`
 }
 
+// UserRegister holds information about a new user registration
+type UserRegister struct {
+	UUID         string `json:"uuid"`
+	Name         string `json:"name"`
+	FirstName    string `json:"first_name"`
+	LastName     string `json:"last_name"`
+	Organization string `json:"organization"`
+	Description  string `json:"description"`
+	Email        string `json:"email"`
+	RegisteredAt string `json:"registered_at"`
+}
+
 // ExportJSON exports User to json format
 func (u *User) ExportJSON() (string, error) {
 	output, err := json.MarshalIndent(u, "", "   ")
@@ -91,6 +103,26 @@ func GetUserFromJSON(input []byte) (User, error) {
 	u := User{}
 	err := json.Unmarshal([]byte(input), &u)
 	return u, err
+}
+
+// RegisterUser registers a new user to the store
+func RegisterUser(uuid, name, fname, lname, email, org, desc, registeredAt string, str stores.Store) (UserRegister, error) {
+
+	err := str.RegisterUser(uuid, name, fname, lname, email, org, desc, registeredAt)
+	if err != nil {
+		return UserRegister{}, err
+	}
+
+	return UserRegister{
+		UUID:         uuid,
+		Name:         name,
+		FirstName:    fname,
+		LastName:     lname,
+		Email:        email,
+		Organization: org,
+		Description:  desc,
+		RegisteredAt: registeredAt,
+	}, nil
 }
 
 // NewUser accepts parameters and creates a new user

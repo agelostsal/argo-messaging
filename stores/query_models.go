@@ -48,6 +48,18 @@ type QProject struct {
 	Description string    `bson:"description"`
 }
 
+// QUserRegister holds information about a UserRegister query
+type QUserRegister struct {
+	UUID         string `json:"uuid"`
+	Name         string `json:"name"`
+	FirstName    string `json:"first_name"`
+	LastName     string `json:"last_name"`
+	Organization string `json:"organization"`
+	Description  string `json:"description"`
+	Email        string `json:"email"`
+	RegisteredAt string `json:"registered_at"`
+}
+
 // QUser are the results of the QUser query
 type QUser struct {
 	ID           interface{}     `bson:"_id,omitempty"`
