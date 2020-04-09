@@ -100,6 +100,10 @@ func (mk *MockStore) RegisterUser(uuid, name, firstName, lastName, email, org, d
 	return nil
 }
 
+func (mk *MockStore) QueryRegistrations(uuid string) ([]QUserRegister, error) { return nil, nil }
+
+func (mk *MockStore) DeleteRegistration(uuid string) error { return nil }
+
 //GetAllRoles returns a list of all available roles
 func (mk *MockStore) GetAllRoles() []string {
 	return []string{"service_admin", "admin", "project_admin", "viewer", "consumer", "producer", "publisher", "push_worker"}

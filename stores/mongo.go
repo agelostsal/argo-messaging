@@ -165,6 +165,33 @@ func (mong *MongoStore) RegisterUser(uuid, name, firstName, lastName, email, org
 	return mong.InsertResource("user_registrations", ur)
 }
 
+func (mong *MongoStore) QueryRegistrations(uuid string) ([]QUserRegister, error) {
+
+	query := bson.M{
+		"uuid": uuid,
+	}
+
+	qur := []QUserRegister{}
+
+	db := mong.Session.DB(mong.Database)
+	c := db.C("user_registrations")
+	err := c.Find(query).All(&qur)
+	if err != nil {
+		return qur, err
+	}
+
+	return qur, nil
+}
+
+func (mong *MongoStore) DeleteRegistration(uuid string) error {
+
+	db := mong.Session.DB(mong.Database)
+	c := db.C("user_registrations")
+
+	ur := bson.M{"uuid": uuid}
+	return c.Remove(ur)
+}
+
 // UpdateUserToken updates user's token
 func (mong *MongoStore) UpdateUserToken(uuid string, token string) error {
 

@@ -125,6 +125,35 @@ func RegisterUser(uuid, name, fname, lname, email, org, desc, registeredAt strin
 	}, nil
 }
 
+func FindUserRegistration(uuid string, str stores.Store) (UserRegister, error) {
+
+	q, err := str.QueryRegistrations(uuid)
+	if err != nil {
+		return UserRegister{}, err
+	}
+
+	if len(q) == 0 {
+		return UserRegister{}, errors.New("not found")
+	}
+
+	ur := UserRegister{
+		UUID:         q[0].UUID,
+		Name:         q[0].Name,
+		FirstName:    q[0].FirstName,
+		LastName:     q[0].LastName,
+		Email:        q[0].Email,
+		Organization: q[0].Organization,
+		Description:  q[0].Description,
+		RegisteredAt: q[0].RegisteredAt,
+	}
+
+	return ur, nil
+}
+
+func DeleteUserRegistration(uuid string, refStr stores.Store) error {
+	return refStr.DeleteRegistration(uuid)
+}
+
 // NewUser accepts parameters and creates a new user
 func NewUser(uuid string, projects []ProjectRoles, name string, fname string, lname string, org string, desc string, token string, email string, serviceRoles []string, createdOn time.Time, modifiedOn time.Time, createdBy string) User {
 	zuluForm := "2006-01-02T15:04:05Z"
@@ -364,8 +393,9 @@ func Authenticate(projectUUID string, token string, store stores.Store) ([]strin
 // ExistsWithName returns true if a user with name exists
 func ExistsWithName(name string, store stores.Store) bool {
 	result := false
-
 	users, err := store.QueryUsers("", "", name)
+	fmt.Println(users)
+	fmt.Println(name)
 	if len(users) > 0 && err == nil {
 		result = true
 	}
